@@ -25,7 +25,7 @@ function logName($name) {
         $late = false;
     }
 
-    $studentsFile = fopen("students.json","a"); // vytvori subor ak neexistuje
+    $studentsFile = fopen("students.json","a");
     fclose($studentsFile);
 
     $studentsArray = json_decode(file_get_contents("students.json"), true);
