@@ -1,0 +1,32 @@
+<?php
+date_default_timezone_set("Europe/Prague");
+
+function getLateString($isLate) : string {
+    if ($isLate){
+        return "Mešká";
+    }else{
+        return "Načas";
+    }
+}
+function logName($name) {
+    $echoThing = "";
+    $late = false;
+
+    if (empty($name)) {
+        header("Location: ../index.php?error=true");
+    } else {
+        if ((int) date("H") >= 20 and (int) date("H") <= 24) {
+            die("Nemôžem zaznamenať. Moc neskoro");
+        }elseif ((int) date("H") > 7 ) {
+            $late = true;
+        }else {
+            $late = false;
+        }
+        $loggerWrite = fopen("logger.txt", "a+") or die("CANNOT OPEN");
+        $echoThing = htmlspecialchars($name) . " || " . date("d-m-y H:i:s") . " || " . getLateString($late) . "\n";
+        fwrite($loggerWrite, $echoThing);
+        header("Location: ../showPeople.php");
+    }
+}
+
+logName($_REQUEST["name"]);

@@ -1,0 +1,11 @@
+<?php
+$loggerFile = fopen("logger.txt", "r") or die("CANNOT OPEN");
+while (!feof($loggerFile)) {
+    echo fgets($loggerFile);
+    echo "<br>";
+}
+fclose($loggerFile);
+// echo $echoThing;
+echo (int) date("H") >= 20;
+?>
+<a href="../index.php">Go back</a>
