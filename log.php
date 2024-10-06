@@ -1,13 +1,6 @@
 <?php
 date_default_timezone_set("Europe/Prague");
 
-function getLateString($isLate) : string {
-    if ($isLate){
-        return "Mešká";
-    }else{
-        return "Načas";
-    }
-}
 function logName($name) {
     $echoThing = "";
     $late = false;
