@@ -14,6 +14,10 @@ if ((int) date("H") >= 20 and (int) date("H") <= 24) {
 
 $studentFileHandler = new StudentFile("students.json");
 
-$studentFileHandler->createNewRecord($name);
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $studentFileHandler->createNewRecord($name);
+}else {
+    echo"no poster";
+}
 
 header("Location: ../showPeople.php");

@@ -1,23 +1,35 @@
 <?php
 class StudentFile
 {
-    private $dbFile;
-    private $dbArray;
+    private $PDOconnection;
 
     function __construct(string $filepath){
-        fclose(fopen($filepath,"a")); // iba aby sa vytvoril ak by neexistoval
-
-        $this->dbArray = json_decode(file_get_contents($filepath), true);
-        $this->dbFile = fopen($filepath,"w");
+        try {
+            $this->PDOconnection = new PDO("mysql:host=127.0.0.1:3306;dbname=students", "root", "root");
+            $this->PDOconnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            echo "Connected successfully";
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+            die();
+        }
     }
 
     function createNewRecord($recordName){
         $late = (int) date("H") > 7;
-        $this->dbArray[$recordName]["logs"][] = array(date("d-m-y H:i:s"),$late);
+        try {
+            $queryName = "INSERT IGNORE INTO students (student_name) VALUES (?);";
+            $queryDate = "INSERT INTO checkouts (student_name, is_late) VALUES (?, ?);";
+
+            $statementName = $this->PDOconnection->prepare($queryName);
+            $statementDate = $this->PDOconnection->prepare($queryDate);
+            $statementName->execute([$recordName]);
+            $statementDate->execute([$recordName,$late]);
+        } catch (PDOException $e) {
+            die("". $e->getMessage());
+        }
     }
 
     function __destruct(){
-        fwrite($this->dbFile, json_encode($this->dbArray));
-        fclose($this->dbFile);
+        $this->PDOconnection = null;
     }
 }
